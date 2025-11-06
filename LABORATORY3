@@ -1,0 +1,136 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+
+export default function App() {
+  const [item, setItem] = useState('');
+  const [list, setList] = useState([]);
+
+  const addItem = () => {
+    if (item.trim() === '') return;
+    setList([...list, item]);
+    setItem('');
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={styles.card}>
+        <Text style={styles.title}>My Favorite List</Text>
+        <Text style={styles.subtitle}>Add items you love below</Text>
+
+        {/* Input Section */}
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter item"
+            placeholderTextColor="#aaa"
+            value={item}
+            onChangeText={setItem}
+          />
+          <TouchableOpacity style={styles.addButton} onPress={addItem}>
+            <Text style={styles.addButtonText}>ADD</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* List Section */}
+        <FlatList
+          data={list}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.listItem}>
+              <Text style={styles.listText}>{item}</Text>
+            </View>
+          )}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No items yet. Add something!</Text>
+          }
+        />
+      </View>
+    </KeyboardAvoidingView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f2f5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    width: '100%',
+    borderRadius: 12,
+    padding: 20,
+    elevation: 5, // shadow sa Android
+    shadowColor: '#000', // shadow sa iOS
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#007AFF',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    backgroundColor: '#fafafa',
+  },
+  addButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  listItem: {
+    backgroundColor: '#e9ecef',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  listText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#aaa',
+    marginTop: 20,
+  },
+});
